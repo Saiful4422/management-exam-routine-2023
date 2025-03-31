@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Routine Countdown</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exam Routine Countdown</h1>
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Exam Date</th>
+            <th>Days Left</th>
+            <th>Hours Left</th>
+        </tr>
+        <tbody id="examTable"></tbody>
+    </table>
+
+    <script>
+        const exams = [
+            { subject: "Operations Management", date: "2025-04-24" },
+            { subject: "Business Statistics", date: "2025-04-27" },
+            { subject: "Organizational Behavior", date: "2025-04-30" },
+            { subject: "Taxation in Bangladesh", date: "2025-05-04" },
+            { subject: "Insurance & Risk Management", date: "2025-05-07" },
+            { subject: "Company Law", date: "2025-05-13" },
+            { subject: "Management Accounting", date: "2025-05-18" },
+            { subject: "Marketing Management", date: "2025-05-21" }
+        ];
+
+        function updateCountdown() {
+            const today = new Date();
+            let tableContent = "";
+
+            exams.forEach(exam => {
+                let examDate = new Date(exam.date);
+                let timeDiff = examDate - today;
+                let daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                let hoursLeft = daysLeft * 24;
+
+                tableContent += `
+                    <tr>
+                        <td>${exam.subject}</td>
+                        <td>${exam.date}</td>
+                        <td>${daysLeft}</td>
+                        <td>${hoursLeft}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("examTable").innerHTML = tableContent;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 3600000); // Update every hour
+    </script>
+</body>
+</html>
