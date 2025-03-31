@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Management Exam Routine 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -53,6 +54,17 @@
             background-color: #f8d7da !important;
             color: #721c24;
         }
+        .download-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background: #ff4081;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -67,6 +79,7 @@
         </tr>
         <tbody id="examTable"></tbody>
     </table>
+    <button class="download-btn" onclick="downloadPDF(true)">Download PDF</button>
 
     <script>
         const exams = [
@@ -111,9 +124,45 @@
             document.getElementById("examTable").innerHTML = tableContent;
         }
 
+        function downloadPDF(withWatermark) {
+            const { jsPDF } = window.jspdf;
+            let doc = new jsPDF();
+            
+            // Add main content
+            doc.setFont("helvetica", "bold");
+            doc.text("Management Exam Routine 2025", 20, 20);
+            doc.setFont("helvetica", "normal");
+            let y = 30;
+            exams.forEach(exam => {
+                doc.text(`${exam.date} | ${exam.day} | ${exam.subject}`, 20, y);
+                y += 10;
+            });
+            
+            // Add watermark if requested
+            if (withWatermark) {
+                doc.setFontSize(40);
+                doc.setTextColor(200, 200, 200); // Very light gray
+                // Center the watermark (A4 page is 210mm wide)
+                doc.text("github.com/Saiful4422", 105, 148, { 
+                    align: "center" // Perfectly centered horizontally
+                });
+                
+                // Add smaller footer text
+                doc.setFontSize(10);
+                doc.setTextColor(150, 150, 150);
+                doc.text("Generated from github.com/Saiful4422", 10, 290);
+            } else {
+                // Just the small footer without watermark
+                doc.setFontSize(10);
+                doc.setTextColor(150, 150, 150);
+                doc.text("github.com/Saiful4422", 10, 290);
+            }
+            
+            doc.save("exam_routine_2025.pdf");
+        }
+
         updateCountdown();
-        setInterval(updateCountdown, 3600000); // Update every hour
+        setInterval(updateCountdown, 3600000);
     </script>
 </body>
 </html>
-
