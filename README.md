@@ -1,16 +1,37 @@
-# Management Exam Routine 2025  
+# Management Exam Routine 2025
 
-This is a simple landing page that displays the countdown for my **management exam routine** with automatic updates for days and hours left.  
+A simple webpage showing the 2025 Management exam schedule with download options.
 
-## 🚀 Live Preview  
-You can view the live page here:  
-👉 https://saiful4422.github.io/management-exam-routine-2023
+## Features
 
-## 📌 Features  
-✅ Displays upcoming exam dates  
-✅ Auto-updates days & hours left    
+- Shows exam dates, days, subjects, and time left.
+- Works on desktop and mobile.
+- Download as:
+  - Light PDF (white background)
+  - Dark PDF (dark background)
+  - CSV (for spreadsheets)
+- Highlights upcoming and past exams.
+- Adds a watermark to PDFs.
 
-## 🛠 How to Use  
-1. Clone this repository:  
-   ```sh
-   git clone https://github.com/saiful4422/management-exam-routine-2023.git
+## How to Use
+
+1. Open `index.html` in a browser.
+2. See the exam schedule.
+3. Click buttons to download as Light PDF, Dark PDF, or CSV.
+
+## Files
+
+- `index.html`: The only file you need.
+
+## Dependencies
+
+- [jsPDF](https://github.com/parallax/jsPDF) (via CDN) for PDFs.
+
+## Credits
+
+- Made by [Saiful4422](https://github.com/Saiful4422).
+- Improved by Grok (from xAI) and ChatGPT.
+
+## License
+
+Free to use (MIT License).
