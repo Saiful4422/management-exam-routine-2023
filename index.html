@@ -12,6 +12,7 @@
             padding: 20px;
             background-color: #1e1e2d;
             color: #fff;
+            margin: 0;
         }
         h1, h2 {
             margin: 10px 0;
@@ -27,16 +28,16 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
         th, td {
-            padding: 15px;
+            padding: 10px;
             text-align: center;
         }
         th {
             background-color: #ff4081;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
         }
         td {
-            font-size: 16px;
+            font-size: 14px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
         tr:last-child td {
@@ -56,14 +57,56 @@
         }
         .download-btn {
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
             color: white;
             background: #ff4081;
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin-right: 10px;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            table {
+                width: 100%;
+                display: block;
+                overflow-x: auto;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+            .download-btn {
+                display: inline-block;
+                width: 45%;
+                margin: 5px 2%;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 16px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 10px;
+                min-width: 60px;
+            }
+            .download-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
@@ -79,7 +122,9 @@
         </tr>
         <tbody id="examTable"></tbody>
     </table>
-    <button class="download-btn" onclick="downloadPDF(true)">Download PDF</button>
+    <button class="download-btn" onclick="downloadPDF(true, false)">Download Light PDF</button>
+    <button class="download-btn" onclick="downloadPDF(true, true)">Download Dark PDF</button>
+    <button class="download-btn" onclick="exportToCSV()">Download CSV</button>
 
     <script>
         const exams = [
@@ -124,41 +169,74 @@
             document.getElementById("examTable").innerHTML = tableContent;
         }
 
-        function downloadPDF(withWatermark) {
+        function downloadPDF(withWatermark, isDark) {
             const { jsPDF } = window.jspdf;
             let doc = new jsPDF();
             
-            // Add main content
+            // Set background and text colors based on theme
+            if (isDark) {
+                doc.setFillColor(30, 30, 45); // #1e1e2d background
+                doc.rect(0, 0, 210, 297, 'F'); // Fill entire page
+                doc.setTextColor(255, 255, 255); // White text
+            } else {
+                doc.setTextColor(0, 0, 0); // Black text for light theme
+            }
+
+            // Title
             doc.setFont("helvetica", "bold");
             doc.text("Management Exam Routine 2025", 20, 20);
+            
+            // Table headers (no Time Left column)
+            doc.setFont("helvetica", "bold");
+            if (isDark) {
+                doc.setFillColor(255, 64, 129); // #ff4081 header background
+                doc.rect(20, 25, 170, 10, 'F');
+            }
+            doc.text("Date", 25, 32);
+            doc.text("Day", 65, 32);
+            doc.text("Subject", 95, 32);
+
+            // Table content (no Time Left column)
             doc.setFont("helvetica", "normal");
-            let y = 30;
+            let y = 40;
             exams.forEach(exam => {
-                doc.text(`${exam.date} | ${exam.day} | ${exam.subject}`, 20, y);
+                if (isDark) {
+                    doc.setFillColor(42, 42, 60); // #2a2a3c row background
+                    doc.rect(20, y-5, 170, 10, 'F');
+                }
+                doc.text(exam.date, 25, y);
+                doc.text(exam.day, 65, y);
+                doc.text(exam.subject, 95, y);
                 y += 10;
             });
-            
-            // Add watermark if requested
+
+            // Watermark
             if (withWatermark) {
                 doc.setFontSize(40);
-                doc.setTextColor(200, 200, 200); // Very light gray
-                // Center the watermark (A4 page is 210mm wide)
-                doc.text("github.com/Saiful4422", 105, 148, { 
-                    align: "center" // Perfectly centered horizontally
-                });
+                doc.setTextColor(isDark ? 60 : 200, isDark ? 60 : 200, isDark ? 60 : 200);
+                doc.text("github.com/Saiful4422", 105, 148, { align: "center" });
                 
-                // Add smaller footer text
                 doc.setFontSize(10);
-                doc.setTextColor(150, 150, 150);
+                doc.setTextColor(isDark ? 100 : 150, isDark ? 100 : 150, isDark ? 100 : 150);
                 doc.text("Generated from github.com/Saiful4422", 10, 290);
-            } else {
-                // Just the small footer without watermark
-                doc.setFontSize(10);
-                doc.setTextColor(150, 150, 150);
-                doc.text("github.com/Saiful4422", 10, 290);
             }
+
+            doc.save(`exam_routine_2025_${isDark ? 'dark' : 'light'}.pdf`);
+        }
+
+        function exportToCSV() {
+            let csvContent = "Date,Day,Subject\n";
+            exams.forEach(exam => {
+                csvContent += `${exam.date},${exam.day},${exam.subject}\n`;
+            });
             
-            doc.save("exam_routine_2025.pdf");
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'exam_routine_2025.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
 
         updateCountdown();
