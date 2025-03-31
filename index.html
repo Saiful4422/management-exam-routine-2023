@@ -3,51 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Routine Countdown</title>
+    <title>Management Exam Routine 2025</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #f8f9fa;
+            background-color: #1e1e2d;
+            color: #fff;
+        }
+        h1, h2 {
+            margin: 10px 0;
+            font-weight: bold;
         }
         table {
-            width: 80%;
+            width: 90%;
             margin: 20px auto;
             border-collapse: collapse;
+            background: #2a2a3c;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
+            padding: 15px;
+            text-align: center;
         }
         th {
-            background-color: #007bff;
+            background-color: #ff4081;
             color: white;
+            font-size: 18px;
+        }
+        td {
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: rgba(255, 64, 129, 0.2);
+            transition: 0.3s;
+        }
+        .warning {
+            background-color: #fff3cd !important;
+            color: #856404;
+        }
+        .danger {
+            background-color: #f8d7da !important;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
-    <h1>Exam Routine Countdown</h1>
+    <h1>📚 Management Exam Routine 2025 📚</h1>
+    <h2>📝 Exam: 2023</h2>
     <table>
         <tr>
-            <th>Subject</th>
-            <th>Exam Date</th>
-            <th>Days Left</th>
-            <th>Hours Left</th>
+            <th>Date 📅</th>
+            <th>Day 🗓️</th>
+            <th>Subject 📖</th>
+            <th>Time Left ⏳</th>
         </tr>
         <tbody id="examTable"></tbody>
     </table>
 
     <script>
         const exams = [
-            { subject: "Operations Management", date: "2025-04-24" },
-            { subject: "Business Statistics", date: "2025-04-27" },
-            { subject: "Organizational Behavior", date: "2025-04-30" },
-            { subject: "Taxation in Bangladesh", date: "2025-05-04" },
-            { subject: "Insurance & Risk Management", date: "2025-05-07" },
-            { subject: "Company Law", date: "2025-05-13" },
-            { subject: "Management Accounting", date: "2025-05-18" },
-            { subject: "Marketing Management", date: "2025-05-21" }
+            { date: "2025-04-24", day: "Thursday", subject: "Operations Management" },
+            { date: "2025-04-27", day: "Sunday", subject: "Business Statistics" },
+            { date: "2025-04-30", day: "Wednesday", subject: "Organizational Behavior" },
+            { date: "2025-05-04", day: "Sunday", subject: "Taxation in Bangladesh" },
+            { date: "2025-05-07", day: "Wednesday", subject: "Insurance & Risk Management" },
+            { date: "2025-05-13", day: "Tuesday", subject: "Company Law" },
+            { date: "2025-05-18", day: "Sunday", subject: "Management Accounting" },
+            { date: "2025-05-21", day: "Wednesday", subject: "Marketing Management" }
         ];
 
         function updateCountdown() {
@@ -57,15 +87,23 @@
             exams.forEach(exam => {
                 let examDate = new Date(exam.date);
                 let timeDiff = examDate - today;
-                let daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-                let hoursLeft = daysLeft * 24;
-
+                let daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                let hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let timeLeft = daysLeft >= 0 ? `${daysLeft} days and ${hoursLeft} hours left` : "<del>Exam Over</del>";
+                
+                let rowClass = "";
+                if (daysLeft < 0) {
+                    rowClass = "danger";
+                } else if (daysLeft <= 2) {
+                    rowClass = "warning";
+                }
+                
                 tableContent += `
-                    <tr>
-                        <td>${exam.subject}</td>
+                    <tr class="${rowClass}">
                         <td>${exam.date}</td>
-                        <td>${daysLeft}</td>
-                        <td>${hoursLeft}</td>
+                        <td>${exam.day}</td>
+                        <td>${exam.subject}</td>
+                        <td>${timeLeft}</td>
                     </tr>
                 `;
             });
@@ -78,3 +116,4 @@
     </script>
 </body>
 </html>
+
